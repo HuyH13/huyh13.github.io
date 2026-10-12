@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Chính sách quyền riêng tư của Second Brain Backup: quyền Google Drive, dữ liệu sao lưu, thông tin xác thực, mã hóa, thời gian lưu giữ và thu hồi quyền.">
+    <title>Chính sách quyền riêng tư — Second Brain Backup</title>
+    <link rel="canonical" href="https://huyh13.github.io/privacy.html">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Đến nội dung chính</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="Second Brain Backup — Trang chủ">
+          <span class="brand-mark" aria-hidden="true">SB</span>
+          <span>Second Brain <span class="brand-muted">Backup</span></span>
+        </a>
+        <nav aria-label="Điều hướng chính">
+          <a href="index.html">Trang chủ</a>
+          <a href="privacy.html" aria-current="page">Quyền riêng tư</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="container policy-layout">
+      <header class="policy-heading">
+        <p class="eyebrow">Second Brain Backup</p>
+        <h1>Chính sách quyền riêng tư</h1>
+        <p class="policy-date">Cập nhật: 12/10/2026 · Giờ Việt Nam</p>
+        <p class="policy-lead">Chính sách này mô tả thành phần sao lưu Second Brain Backup và trang giới thiệu này. Công cụ do HuyH13 quản lý, dùng để sao lưu dữ liệu cá nhân từ VPS vào tài khoản Google Drive do chủ sở hữu cấp quyền.</p>
+      </header>
+
+      <div class="policy-body">
+        <section aria-labelledby="data-title">
+          <h2 id="data-title">1. Dữ liệu và quyền Google Drive</h2>
+          <p>Rclone sử dụng quyền Google Drive để truy vấn thông tin dung lượng, đọc danh sách và thông tin tệp, tải các bản sao lưu lên và tải xuống dữ liệu để kiểm tra hoặc phục hồi. Bản sao lưu chứa cơ sở dữ liệu SQLite của Second Brain, các tệp đính kèm đang lưu cục bộ, thông tin liên quan và checksum để kiểm tra tính toàn vẹn.</p>
+          <p>Cấu hình dùng phạm vi OAuth <code>https://www.googleapis.com/auth/drive</code>. Phạm vi này cho phép đọc, tạo, sửa và xóa các tệp trên Drive; quyền được cấp không giới hạn về kỹ thuật trong thư mục sao lưu. Khi vận hành, công cụ được cấu hình với một thư mục sao lưu đã chỉ định trong Drive của chủ sở hữu.</p>
+          <p>Thông tin xác thực OAuth gồm access token và refresh token được rclone sử dụng để truy cập Drive và tự gia hạn phiên truy cập.</p>
+        </section>
+
+        <section aria-labelledby="use-title">
+          <h2 id="use-title">2. Mục đích sử dụng</h2>
+          <p>Thành phần sao lưu sử dụng dữ liệu và quyền Google để tạo, lưu, kiểm tra, tải xuống và phục hồi các bản sao lưu theo cấu hình của chủ sở hữu. Việc đọc lại dữ liệu từ Drive giúp kiểm tra bản tải lên bằng SHA-256.</p>
+          <p>Thành phần sao lưu không bán dữ liệu Google, không sử dụng dữ liệu đó cho quảng cáo hoặc để huấn luyện mô hình AI. Chính sách này chỉ mô tả thành phần sao lưu; không mô tả các tính năng xử lý AI khác của ứng dụng Second Brain.</p>
+        </section>
+
+        <section aria-labelledby="storage-title">
+          <h2 id="storage-title">3. Lưu trữ và bảo vệ</h2>
+          <p>Cơ sở dữ liệu, tệp gốc và bản sao lưu cục bộ nằm trên VPS do chủ sở hữu quản lý. Thông tin OAuth và cấu hình mã hóa được lưu trong tệp cấu hình rclone trên VPS, chỉ cho tài khoản quản trị đọc và ghi. Tệp cấu hình này không được mặc định mã hóa; cần được giữ kín và sao lưu ở nơi bảo mật.</p>
+          <p>Khi đã cấu hình remote rclone <code>crypt</code> với mã hóa tên tệp, nội dung và tên tệp sao lưu được mã hóa trước khi truyền tới Google Drive. Nếu chưa cấu hình lớp này, dữ liệu tải lên không được rclone crypt mã hóa. Mật khẩu mã hóa và cấu hình cần được giữ riêng ngoài VPS để phục hồi khi máy bị mất.</p>
+          <p>Google Drive lưu bản sao lưu từ VPS theo cấu hình của chủ sở hữu và chính sách của Google. Việc mã hóa bằng crypt không che toàn bộ thông tin vận hành, chẳng hạn kích thước tệp và thời điểm tải lên.</p>
+        </section>
+
+        <section aria-labelledby="retention-title">
+          <h2 id="retention-title">4. Thời gian lưu giữ và xóa</h2>
+          <p>Cấu hình được hướng dẫn giữ 7 bản sao lưu cục bộ gần nhất đã tải lên và kiểm tra thành công. Khi tải lên hoặc kiểm tra từ xa thất bại, công cụ giữ các bản sao lưu cục bộ để thử lại. Số lượng giữ lại có thể được chủ sở hữu thay đổi.</p>
+          <p>Công cụ không tự dọn các bản sao lưu cũ trên Google Drive. Chủ sở hữu quyết định thời gian lưu giữ và chủ động xóa chúng trong Drive. Xóa dữ liệu trong ứng dụng không tự xóa dữ liệu đã nằm trong các bản sao lưu cũ; muốn xóa hoàn toàn cần quản lý cả những bản sao lưu liên quan.</p>
+        </section>
+
+        <section aria-labelledby="consent-title">
+          <h2 id="consent-title">5. Thu hồi quyền truy cập</h2>
+          <p>Chủ sở hữu có thể thu hồi quyền của Second Brain Backup trong phần <a href="https://myaccount.google.com/connections">kết nối với ứng dụng bên thứ ba của tài khoản Google</a>. Sau khi thu hồi, rclone cần được cấp quyền lại để tiếp tục truy cập Drive.</p>
+          <p>Thu hồi quyền không xóa các bản sao lưu đã lưu trên Drive hoặc VPS. Chủ sở hữu cần xóa các bản sao lưu và thông tin xác thực đã lưu nếu không muốn giữ chúng.</p>
+        </section>
+
+        <section aria-labelledby="hosting-title">
+          <h2 id="hosting-title">6. Trang web này</h2>
+          <p>Trang giới thiệu và chính sách là trang tĩnh được lưu trữ trên GitHub Pages. Trang không có biểu mẫu, không nhận token Google và không thêm mã phân tích, quảng cáo hoặc cookie riêng.</p>
+          <p>GitHub có thể xử lý thông tin truy cập, bao gồm địa chỉ IP, để vận hành và bảo vệ dịch vụ hosting theo <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">chính sách quyền riêng tư của GitHub</a>. Các liên kết tới Google và GitHub dẫn tới dịch vụ có chính sách riêng.</p>
+        </section>
+
+        <section aria-labelledby="contact-title">
+          <h2 id="contact-title">7. Liên hệ và thay đổi chính sách</h2>
+          <p>Đơn vị quản lý: HuyH13. Với câu hỏi về quyền truy cập, dữ liệu hoặc việc xóa, dùng địa chỉ email hỗ trợ hiển thị trên màn hình cấp quyền Google của Second Brain Backup. Hồ sơ công khai của chủ sở hữu: <a href="https://github.com/HuyH13">github.com/HuyH13</a>.</p>
+          <p>Chính sách có thể được cập nhật khi cách sử dụng dữ liệu hoặc cấu hình sao lưu thay đổi. Ngày cập nhật được ghi ở đầu trang.</p>
+        </section>
+      </div>
+
+      <aside class="policy-summary" aria-labelledby="summary-title">
+        <p class="eyebrow">Thông tin chính</p>
+        <h2 id="summary-title">Chủ sở hữu kiểm soát dữ liệu.</h2>
+        <ul>
+          <li>Drive do chủ sở hữu cấp quyền.</li>
+          <li>Mã hóa trước khi tải lên khi đã cấu hình crypt.</li>
+          <li>Không tự xóa các bản sao lưu trên Drive.</li>
+          <li>Có thể thu hồi quyền Google.</li>
+        </ul>
+        <a class="text-link" href="index.html">Về trang giới thiệu <span aria-hidden="true">→</span></a>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>Second Brain Backup · HuyH13</span>
+        <a href="privacy.html">Chính sách quyền riêng tư</a>
+        <span>Cập nhật 12/10/2026</span>
+      </div>
+    </footer>
+  </body>
+</html>
